@@ -1,0 +1,559 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>California House Price Predictor</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #667eea,
+                    #764ba2,
+                    #f093fb
+                );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+
+            background: rgba(255, 255, 255, 0.95);
+
+            border-radius: 25px;
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.25);
+
+            overflow: hidden;
+        }
+
+        /* ---------- HEADER ---------- */
+
+        .header {
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff6a00,
+                    #ee0979
+                );
+
+            color: white;
+
+            padding: 35px;
+
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 17px;
+            opacity: 0.9;
+        }
+
+
+        /* ---------- CONTENT ---------- */
+
+        .content {
+            padding: 40px;
+        }
+
+        .description {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #555;
+            font-size: 16px;
+        }
+
+
+        /* ---------- FORM ---------- */
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 25px;
+        }
+
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .input-group label {
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            color: #444;
+
+            margin-bottom: 8px;
+        }
+
+
+        .input-group input {
+
+            padding: 14px 16px;
+
+            border: 2px solid #ddd;
+
+            border-radius: 12px;
+
+            font-size: 16px;
+
+            outline: none;
+
+            transition: 0.3s;
+        }
+
+
+        .input-group input:focus {
+
+            border-color: #764ba2;
+
+            box-shadow:
+                0 0 10px rgba(118, 75, 162, 0.25);
+        }
+
+
+        .input-group input:hover {
+
+            border-color: #aaa;
+        }
+
+
+        /* ---------- BUTTON ---------- */
+
+        .button-container {
+
+            margin-top: 35px;
+
+            text-align: center;
+        }
+
+
+        .predict-btn {
+
+            width: 60%;
+
+            padding: 16px;
+
+            border: none;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #667eea,
+                    #764ba2
+                );
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+
+        .predict-btn:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 12px 25px rgba(102, 126, 234, 0.5);
+        }
+
+
+        .predict-btn:active {
+
+            transform: translateY(0);
+        }
+
+
+        /* ---------- RESULT ---------- */
+
+        .result {
+
+            margin-top: 35px;
+
+            padding: 25px;
+
+            border-radius: 18px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d4fc79,
+                    #96e6a1
+                );
+
+            border: 2px solid #8bd48f;
+        }
+
+
+        .result h2 {
+
+            color: #155724;
+
+            font-size: 22px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .price {
+
+            font-size: 35px;
+
+            font-weight: bold;
+
+            color: #0b6e2e;
+        }
+
+
+        .result p {
+
+            margin-top: 8px;
+
+            color: #315b3b;
+        }
+
+
+        /* ---------- INFO CARDS ---------- */
+
+        .info-section {
+
+            margin-top: 40px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .info-card {
+
+            padding: 20px;
+
+            border-radius: 15px;
+
+            text-align: center;
+
+            background: #f7f7ff;
+
+            border: 1px solid #eee;
+
+            transition: 0.3s;
+        }
+
+
+        .info-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .info-card .icon {
+
+            font-size: 30px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .info-card h3 {
+
+            color: #333;
+
+            margin-bottom: 7px;
+        }
+
+
+        .info-card p {
+
+            color: #777;
+
+            font-size: 14px;
+        }
+
+
+        /* ---------- FOOTER ---------- */
+
+        .footer {
+
+            text-align: center;
+
+            padding: 20px;
+
+            background: #f5f5f5;
+
+            color: #777;
+
+            font-size: 14px;
+        }
+
+
+        /* ---------- RESPONSIVE ---------- */
+
+        @media (max-width: 700px) {
+
+            .form-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .info-section {
+
+                grid-template-columns: 1fr;
+            }
+
+            .predict-btn {
+
+                width: 100%;
+            }
+
+            .header h1 {
+
+                font-size: 27px;
+            }
+
+            .content {
+
+                padding: 25px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>🏠 California House Price Predictor</h1>
+
+        <p>
+            Machine Learning powered house price prediction
+        </p>
+
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+
+    <div class="content">
+
+
+        <div class="description">
+
+            <p>
+                Enter the house details below and our
+                Machine Learning model will estimate
+                the median house value.
+            </p>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form action="/predict" method="POST">
+
+
+            <div class="form-grid">
+
+
+                {% for column in columns %}
+
+                <div class="input-group">
+
+                    <label for="{{ column }}">
+                        {{ column }}
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="{{ column }}"
+                        id="{{ column }}"
+                        placeholder="Enter {{ column }}"
+                        required
+                    >
+
+                </div>
+
+                {% endfor %}
+
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <div class="button-container">
+
+                <button
+                    type="submit"
+                    class="predict-btn"
+                >
+
+                    🔮 Predict House Price
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+        <!-- RESULT -->
+
+        {% if prediction is defined %}
+
+        <div class="result">
+
+            <h2>🎉 Predicted House Value</h2>
+
+            <div class="price">
+
+                ${{ "%.2f"|format(prediction) }}
+
+            </div>
+
+            <p>
+                Estimated median house value
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- INFORMATION CARDS -->
+
+        <div class="info-section">
+
+
+            <div class="info-card">
+
+                <div class="icon">🤖</div>
+
+                <h3>Machine Learning</h3>
+
+                <p>
+                    Prediction is generated
+                    using a trained ML model.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="icon">📊</div>
+
+                <h3>Data Driven</h3>
+
+                <p>
+                    Multiple housing features
+                    are used for prediction.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="icon">⚡</div>
+
+                <h3>Fast Prediction</h3>
+
+                <p>
+                    Enter the values and get
+                    your prediction instantly.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        California House Price Prediction •
+        Flask + Machine Learning
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
+```
